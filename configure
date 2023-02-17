@@ -179,6 +179,7 @@ xnvme=""
 libblkio=""
 libzbc=""
 dfs=""
+ds3=""
 seed_buckets=""
 dynamic_engines="no"
 prefix=/usr/local
@@ -261,6 +262,8 @@ for opt do
   ;;
   --disable-dfs) dfs="no"
   ;;
+  --disable-ds3) ds3="no"
+  ;;
   --enable-asan) asan="yes"
   ;;
   --seed-buckets=*) seed_buckets="$optarg"
@@ -312,6 +315,7 @@ if test "$show_help" = "yes" ; then
   echo "--disable-tcmalloc      Disable tcmalloc support"
   echo "--dynamic-libengines    Lib-based ioengines as dynamic libraries"
   echo "--disable-dfs           Disable DAOS File System support even if found"
+  echo "--disable-ds3           Disable DAOS S3 support even if found"
   echo "--enable-asan           Enable address sanitizer"
   echo "--seed-buckets=         Number of seed buckets for the refill-buffer"
   exit $exit_val
@@ -2351,6 +2355,30 @@ fi
 print_config "DAOS File System (dfs) Engine" "$dfs"
 
 ##########################################
+# check for ds3 (DAOS S3)
+if test "$ds3" != "no" ; then
+  cat > $TMPC << EOF
+#include <fcntl.h>
+#include <daos.h>
+#include <daos_s3.h>
+
+int main(int argc, char **argv)
+{
+
+  (void) ds3_init();
+
+  return 0;
+}
+EOF
+  if compile_prog "" "-luuid -lds3 -ldfs -ldaos" "ds3"; then
+    ds3="yes"
+  else
+    ds3="no"
+  fi
+fi
+print_config "DAOS S3 (ds3) Engine" "$ds3"
+
+##########################################
 # Check if we have libnfs (for userspace nfs support).
 if test "$libnfs" != "no" ; then
   if $(pkg-config libnfs > /dev/null 2>&1); then
@@ -3264,6 +3292,9 @@ if test "$libcufile" = "yes" ; then
 fi
 if test "$dfs" = "yes" ; then
   output_sym "CONFIG_DFS"
+fi
+if test "$ds3" = "yes" ; then
+  output_sym "CONFIG_DS3"
 fi
 if test "$march_set" = "no" && test "$build_native" = "yes" ; then
   output_sym "CONFIG_BUILD_NATIVE"

@@ -144,6 +144,11 @@ Just type::
  $ make
  $ make install
 
+Building dfs/ds3 capable fio::
+
+ $ CFLAGS="-I/path/to/daos/install/include" LDFLAGS="-L/path/to/daos/install/lib64" ./configure
+ $ make
+
 Note that GNU make is required. On BSDs it's available from devel/gmake within
 ports directory; on Solaris it's in the SUNWgmake package.  On platforms where
 GNU make isn't the default, type ``gmake`` instead of ``make``.

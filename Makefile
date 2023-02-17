@@ -172,6 +172,11 @@ ifdef CONFIG_DFS
   dfs_LIBS = -luuid -ldaos -ldfs
   ENGINES += dfs
 endif
+ifdef CONFIG_DS3
+  ds3_SRCS = engines/ds3.c
+  ds3_LIBS = -luuid -lds3 -ldfs -ldaos
+  ENGINES += ds3
+endif
 SOURCE += oslib/asprintf.c
 ifndef CONFIG_STRSEP
   SOURCE += oslib/strsep.c

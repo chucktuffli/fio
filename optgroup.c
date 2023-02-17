@@ -186,6 +186,10 @@ static const struct opt_group fio_opt_cat_groups[] = {
 		.mask	= FIO_OPT_G_DFS,
 	},
 	{
+		.name	= "DAOS S3 (ds3) I/O engine", /* ds3 */
+		.mask	= FIO_OPT_G_DS3,
+	},
+	{
 		.name	= "NFS I/O engine", /* nfs */
 		.mask	= FIO_OPT_G_NFS,
 	},
